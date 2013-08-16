@@ -123,7 +123,11 @@ class Storage(BaseStorage):
       credentials: Credentials, the credentials to store.
     """
     args = {self.key_name: self.key_value}
-    entity = self.model_class(**args)
+    entities = self.model_class.objects.filter(**args)
+    if len(entities) > 0:
+        entity = entities[0]
+    else:
+        entity = self.model_class(**args)
     setattr(entity, self.property_name, credentials)
     entity.save()
 
